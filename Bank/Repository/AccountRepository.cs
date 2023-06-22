@@ -19,7 +19,7 @@ public class AccountRepository : IAccountRepository
                 _context.SaveChanges();
     }
 
-    public List<AccountModel> GetUserAccount(int userId)
+    public List<AccountModel> GetUserAccounts(int userId)
     {
         return _context.Customers.Where(c => c.Id == userId).SelectMany(a => a.Accounts).ToList();
     }

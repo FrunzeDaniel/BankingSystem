@@ -22,6 +22,8 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerTypeRepository, CustomerTypeRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountTypeRepository, AccountTypeRepository>();
+builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
+builder.Services.AddScoped<IProductAndServicesRepository, ProductAndServicesRepository>();
 // builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 // builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

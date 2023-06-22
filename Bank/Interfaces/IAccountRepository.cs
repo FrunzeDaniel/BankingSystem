@@ -5,5 +5,5 @@ namespace Bank.Interfaces;
 public interface IAccountRepository
 {
     public void CreateNewAccount(AccountModel account);
-    public List<AccountModel> GetUserAccount(int userId);
+    public List<AccountModel> GetUserAccounts(int userId);
 }

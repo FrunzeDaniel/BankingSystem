@@ -73,7 +73,7 @@ public class AccountController : ControllerBase
     [HttpGet("GetUserAccounts/{id}")]
     public IActionResult GetUserAccounts(int id)
     {
-        List<AccountModel> accounts = _accountRepository.GetUserAccount(id);
+        List<AccountModel> accounts = _accountRepository.GetUserAccounts(id);
 
         List<GetAccountDto> accountDtos = _mapper.Map<List<AccountModel>, List<GetAccountDto>>(accounts);
 

@@ -22,6 +22,7 @@ public class MappingProfiles : Profile
         if(_context == null)
             Console.WriteLine("Is null");
         CreateMap<CustomerModel, CustomerDto>();
+        CreateMap<CustomerDto, CustomerModel>();
         CreateMap<CustomerTypeModel, CustomerTypeDto>();
         CreateMap<CustomerPurchaseModel, CustomerPurchaseDto>();
         

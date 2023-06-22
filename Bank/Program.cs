@@ -1,6 +1,8 @@
 using AutoMapper;
 using Bank.Domain;
 using Bank.Helper;
+using Bank.Interfaces;
+using Bank.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,8 @@ builder.Services.AddScoped(provider => new MapperConfiguration(cfg =>
 {
     cfg.AddProfile(new MappingProfiles(provider.GetService<AppDbContext>()));
 }).CreateMapper());
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerTypeRepository, CustomerTypeRepository>();
 // builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 // builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

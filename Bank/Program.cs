@@ -20,6 +20,8 @@ builder.Services.AddScoped(provider => new MapperConfiguration(cfg =>
 }).CreateMapper());
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerTypeRepository, CustomerTypeRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IAccountTypeRepository, AccountTypeRepository>();
 // builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 // builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

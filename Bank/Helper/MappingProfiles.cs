@@ -27,6 +27,7 @@ public class MappingProfiles : Profile
         CreateMap<CustomerPurchaseModel, CustomerPurchaseDto>();
         
         CreateMap<AccountModel, AccountDto>();
+        CreateMap<AccountDto, AccountModel>();
         CreateMap<AccountModel, GetAccountDto>()
             .ForMember(t => t.AccountType, opt => 
                 opt.MapFrom(a => _context.AccountTypes.FirstOrDefault(t => t.Id == a.AccountTypeId).Description))

@@ -3,6 +3,7 @@ using Bank.Domain;
 using Bank.Domain.Dto.Account;
 using Bank.Domain.Entity.Account;
 using Bank.Domain.Entity.Transactions;
+using Bank.Interfaces;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,16 @@ namespace Bank.Controllers;
 [Route("[controller]")]
 public class AccountController : ControllerBase
 {
-    private readonly AppDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IAccountRepository _accountRepository;
+    private readonly IAccountTypeRepository _accountTypeRepository;
+    private readonly ICustomerRepository _customerRepository;
 
-    public AccountController(AppDbContext context, IMapper mapper)
+    public AccountController(IAccountRepository accountRepository, IAccountTypeRepository accountTypeRepository, ICustomerRepository customerRepository, IMapper mapper)
     {
-        _context = context;
+        _accountRepository = accountRepository;
+        _accountTypeRepository = accountTypeRepository;
+        _customerRepository = customerRepository;
         _mapper = mapper;
     }
 
@@ -31,15 +36,14 @@ public class AccountController : ControllerBase
             return BadRequest("Invalid data!");
         
         type.Accounts = new List<AccountModel>();
-        _context.AccountTypes.Add(type);
-        _context.SaveChanges();
+        _accountTypeRepository.CreateAccountType(type);
         return Ok();
     }
 
     [HttpGet("GetAccountTypes")]
     public IActionResult GetAccountTypes()
     {
-        List<AccountTypeModel> types = _context.AccountTypes.ToList();
+        List<AccountTypeModel> types = _accountTypeRepository.GetAccountsTypes();
 
         if (types.Count <= 0)
             return NotFound();
@@ -52,17 +56,16 @@ public class AccountController : ControllerBase
     [HttpPost("CreateAccount")]
     public IActionResult CreateAccount([FromBody] AccountDto accountDto)
     {
-        var account = _mapper.Map<AccountDto, AccountModel>(accountDto);
+        var account = _mapper.Map<AccountModel>(accountDto);
 
         if (!ModelState.IsValid)
             return BadRequest("Invalid data!");
         
         account.Transactions = new List<TransactionModel>();
-        account.Customer = _context.Customers.FirstOrDefault(c => c.Id == account.CustomerId);
-        account.Type = _context.AccountTypes.FirstOrDefault(t => t.Id == account.AccountTypeId);
+        account.Customer = _customerRepository.GetCustomer(account.CustomerId);
+        account.Type = _accountTypeRepository.GetAccountTypeById(account.AccountTypeId);
 
-        _context.Accounts.Add(account);
-        _context.SaveChanges();
+        _accountRepository.CreateNewAccount(account);
         
         return Ok();
     }
@@ -70,7 +73,7 @@ public class AccountController : ControllerBase
     [HttpGet("GetUserAccounts/{id}")]
     public IActionResult GetUserAccounts(int id)
     {
-        List<AccountModel> accounts = _context.Accounts.Where(a => a.Id == id).ToList();
+        List<AccountModel> accounts = _accountRepository.GetUserAccount(id);
 
         List<GetAccountDto> accountDtos = _mapper.Map<List<AccountModel>, List<GetAccountDto>>(accounts);
 

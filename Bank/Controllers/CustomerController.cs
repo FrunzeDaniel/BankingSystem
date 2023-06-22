@@ -95,6 +95,18 @@ public class CustomerController : ControllerBase
         return Ok(customers);
     }
 
+    [HttpGet("GetCustomersByType/{typeId}")]
+    public IActionResult GetCustomersByType(int typeId)
+    {
+        List<CustomerDto> customers =
+            _mapper.Map<List<CustomerModel>, List<CustomerDto>>(_customerTypeRepository.GetCustomersByType(typeId));
+
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        return Ok(customers);
+    }
+
     // [HttpPost("MakePurchase")]
     // public IActionResult MakePurchase([FromBody] CustomerPurchaseDto purchaseDto)
     // {
@@ -112,5 +124,5 @@ public class CustomerController : ControllerBase
     //     _context.SaveChanges();
     //     return Ok();
     // }
-    
+
 }

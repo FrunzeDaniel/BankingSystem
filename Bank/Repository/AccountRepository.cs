@@ -23,4 +23,9 @@ public class AccountRepository : IAccountRepository
     {
         return _context.Customers.Where(c => c.Id == userId).SelectMany(a => a.Accounts).ToList();
     }
+
+    public AccountModel GetAccountById(int id)
+    {
+        return _context.Accounts.Where(a => a.Id == id).FirstOrDefault();
+    }
 }

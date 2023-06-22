@@ -2,6 +2,7 @@
 using Bank.Domain;
 using Bank.Domain.Dto.Transaction;
 using Bank.Domain.Entity.Transactions;
+using Bank.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bank.Controllers;
@@ -9,12 +10,16 @@ namespace Bank.Controllers;
 [Route("[controller]")]
 public class TransactionController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly ITransactionRepository _transactionRepository;
+    private readonly ITransactionTypeRepository _transactionTypeRepository;
+    private readonly IAccountRepository _accountRepository;
     private readonly IMapper _mapper;
     
-    public TransactionController(AppDbContext context, IMapper mapper)
+    public TransactionController(ITransactionRepository transactionRepository, ITransactionTypeRepository transactionTypeRepository, IAccountRepository accountRepository, IMapper mapper)
     {
-        _context = context;
+        _transactionRepository = transactionRepository;
+        _transactionTypeRepository = transactionTypeRepository;
+        _accountRepository = accountRepository;
         _mapper = mapper;
     }
 
@@ -27,8 +32,7 @@ public class TransactionController : ControllerBase
             return BadRequest("Invalid data!");
 
         type.Transactions = new List<TransactionModel>();
-        _context.TransactionTypes.Add(type);
-        _context.SaveChanges();
+        _transactionTypeRepository.CreateTransactionType(type);
         return Ok();
     }
 
@@ -38,13 +42,11 @@ public class TransactionController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest("Invalid data!");
 
-        transaction.TransactionType =
-            _context.TransactionTypes.FirstOrDefault(t => t.Id == transaction.TransactionTypeId);
-        transaction.Account = _context.Accounts.FirstOrDefault(a => a.Id == transaction.AccountId);
+        transaction.TransactionType = _transactionTypeRepository.GetTransactionTypeById(transaction.TransactionTypeId);
+        transaction.Account = _accountRepository.GetAccountById(transaction.AccountId);
         transaction.CustomerPurchase = _context.CustomerPurchases.FirstOrDefault(p => p.Id == transaction.PurchaseId);
 
-        _context.Transactions.Add(transaction);
-        _context.SaveChanges();
+        _transactionRepository.CreateTransaction(transaction);
         return Ok();
 
     }

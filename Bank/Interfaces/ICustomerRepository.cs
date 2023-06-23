@@ -12,4 +12,9 @@ public interface ICustomerRepository
     public CustomerModel GetCustomer(int id);
     public List<CustomerModel> GetCustomersByName(string name);
     public void CreateNewCustomer(CustomerModel customer);
+    public List<CustomerTypeModel> GetCustomerTypes();
+    public void CreateNewCustomerType(CustomerTypeModel customerType);
+
+    public List<CustomerModel> GetCustomersByType(int typeId);
+    public CustomerTypeModel GetCustomerTypeById(int id);
 }

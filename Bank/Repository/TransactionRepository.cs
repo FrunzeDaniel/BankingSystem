@@ -34,4 +34,19 @@ public class TransactionRepository : ITransactionRepository
     {
         return _context.Transactions.Where(t => t.Id == id).FirstOrDefault();
     }
+    public void CreateTransactionType(TransactionTypeModel type)
+    {
+        _context.TransactionTypes.Add(type);
+        _context.SaveChanges();
+    }
+
+    public List<TransactionTypeModel> GetAllTransactionTypes()
+    {
+        return _context.TransactionTypes.ToList();
+    }
+
+    public TransactionTypeModel GetTransactionTypeById(int id)
+    {
+        return _context.TransactionTypes.Where(t => t.Id == id).FirstOrDefault();
+    }
 }

@@ -11,14 +11,12 @@ namespace Bank.Controllers;
 public class TransactionController : ControllerBase
 {
     private readonly ITransactionRepository _transactionRepository;
-    private readonly ITransactionTypeRepository _transactionTypeRepository;
     private readonly IAccountRepository _accountRepository;
     private readonly IMapper _mapper;
     
-    public TransactionController(ITransactionRepository transactionRepository, ITransactionTypeRepository transactionTypeRepository, IAccountRepository accountRepository, IMapper mapper)
+    public TransactionController(ITransactionRepository transactionRepository, IAccountRepository accountRepository, IMapper mapper)
     {
         _transactionRepository = transactionRepository;
-        _transactionTypeRepository = transactionTypeRepository;
         _accountRepository = accountRepository;
         _mapper = mapper;
     }
@@ -32,7 +30,7 @@ public class TransactionController : ControllerBase
             return BadRequest("Invalid data!");
 
         type.Transactions = new List<TransactionModel>();
-        _transactionTypeRepository.CreateTransactionType(type);
+        _transactionRepository.CreateTransactionType(type);
         return Ok();
     }
 
@@ -42,13 +40,12 @@ public class TransactionController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest("Invalid data!");
 
-        transaction.TransactionType = _transactionTypeRepository.GetTransactionTypeById(transaction.TransactionTypeId);
+        transaction.TransactionType = _transactionRepository.GetTransactionTypeById(transaction.TransactionTypeId);
         transaction.Account = _accountRepository.GetAccountById(transaction.AccountId);
         transaction.CustomerPurchase = _context.CustomerPurchases.FirstOrDefault(p => p.Id == transaction.PurchaseId);
 
         _transactionRepository.CreateTransaction(transaction);
         return Ok();
-
     }
     
 }

@@ -13,13 +13,11 @@ namespace Bank.Controllers;
 public class CustomerController : ControllerBase
 {
     private readonly ICustomerRepository _customerRepository;
-    private readonly ICustomerTypeRepository _customerTypeRepository;
     private readonly IMapper _mapper;
     
-    public CustomerController(ICustomerRepository customerRepository, ICustomerTypeRepository customerTypeRepository, IMapper mapper)
+    public CustomerController(ICustomerRepository customerRepository, IMapper mapper)
     {
         _customerRepository = customerRepository;
-        _customerTypeRepository = customerTypeRepository;
         _mapper = mapper;
     }
     
@@ -32,14 +30,14 @@ public class CustomerController : ControllerBase
             return BadRequest("Invalid data!");
         
         type.Customers = new List<CustomerModel>();
-        _customerTypeRepository.CreateNewCustomerType(type);
+        _customerRepository.CreateNewCustomerType(type);
         return Ok();
     }
     
     [HttpGet("GetCustomerTypes")]
     public IActionResult GetCustomerTypes()
     {
-        List<CustomerTypeDto> typeDtos = _mapper.Map<List<CustomerTypeModel>, List<CustomerTypeDto>>(_customerTypeRepository.GetCustomerTypes());
+        List<CustomerTypeDto> typeDtos = _mapper.Map<List<CustomerTypeModel>, List<CustomerTypeDto>>(_customerRepository.GetCustomerTypes());
 
         return Ok(typeDtos);
     }
@@ -54,7 +52,7 @@ public class CustomerController : ControllerBase
 
         customer.Accounts = new List<AccountModel>();
         customer.CustomerPurchases = new List<CustomerPurchaseModel>();
-        customer.Type = _customerTypeRepository.GetCustomerTypeById(customer.TypeId);
+        customer.Type = _customerRepository.GetCustomerTypeById(customer.TypeId);
         _customerRepository.CreateNewCustomer(customer);
         return Ok();
     }
@@ -99,7 +97,7 @@ public class CustomerController : ControllerBase
     public IActionResult GetCustomersByType(int typeId)
     {
         List<CustomerDto> customers =
-            _mapper.Map<List<CustomerModel>, List<CustomerDto>>(_customerTypeRepository.GetCustomersByType(typeId));
+            _mapper.Map<List<CustomerModel>, List<CustomerDto>>(_customerRepository.GetCustomersByType(typeId));
 
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

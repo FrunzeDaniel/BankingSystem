@@ -16,13 +16,11 @@ public class AccountController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IAccountRepository _accountRepository;
-    private readonly IAccountTypeRepository _accountTypeRepository;
     private readonly ICustomerRepository _customerRepository;
 
-    public AccountController(IAccountRepository accountRepository, IAccountTypeRepository accountTypeRepository, ICustomerRepository customerRepository, IMapper mapper)
+    public AccountController(IAccountRepository accountRepository, ICustomerRepository customerRepository, IMapper mapper)
     {
         _accountRepository = accountRepository;
-        _accountTypeRepository = accountTypeRepository;
         _customerRepository = customerRepository;
         _mapper = mapper;
     }
@@ -36,14 +34,14 @@ public class AccountController : ControllerBase
             return BadRequest("Invalid data!");
         
         type.Accounts = new List<AccountModel>();
-        _accountTypeRepository.CreateAccountType(type);
+        _accountRepository.CreateAccountType(type);
         return Ok();
     }
 
     [HttpGet("GetAccountTypes")]
     public IActionResult GetAccountTypes()
     {
-        List<AccountTypeModel> types = _accountTypeRepository.GetAccountsTypes();
+        List<AccountTypeModel> types = _accountRepository.GetAccountsTypes();
 
         if (types.Count <= 0)
             return NotFound();
@@ -63,7 +61,7 @@ public class AccountController : ControllerBase
         
         account.Transactions = new List<TransactionModel>();
         account.Customer = _customerRepository.GetCustomer(account.CustomerId);
-        account.Type = _accountTypeRepository.GetAccountTypeById(account.AccountTypeId);
+        account.Type = _accountRepository.GetAccountTypeById(account.AccountTypeId);
 
         _accountRepository.CreateNewAccount(account);
         

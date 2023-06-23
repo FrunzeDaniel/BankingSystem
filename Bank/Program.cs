@@ -19,11 +19,10 @@ builder.Services.AddScoped(provider => new MapperConfiguration(cfg =>
     cfg.AddProfile(new MappingProfiles(provider.GetService<AppDbContext>()));
 }).CreateMapper());
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-builder.Services.AddScoped<ICustomerTypeRepository, CustomerTypeRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<IAccountTypeRepository, AccountTypeRepository>();
 builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
 builder.Services.AddScoped<IProductAndServicesRepository, ProductAndServicesRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 // builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 // builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

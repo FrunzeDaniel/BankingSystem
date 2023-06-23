@@ -28,4 +28,20 @@ public class AccountRepository : IAccountRepository
     {
         return _context.Accounts.Where(a => a.Id == id).FirstOrDefault();
     }
+    
+    public void CreateAccountType(AccountTypeModel accountType)
+    {
+        _context.AccountTypes.Add(accountType);
+        _context.SaveChanges();
+    }
+
+    public List<AccountTypeModel> GetAccountsTypes()
+    {
+        return _context.AccountTypes.ToList();
+    }
+
+    public AccountTypeModel GetAccountTypeById(int id)
+    {
+        return _context.AccountTypes.Where(t => t.Id == id).FirstOrDefault();
+    }
 }
